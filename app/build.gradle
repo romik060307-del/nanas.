@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.rkdesign.yutobok'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.rkdesign.yutobok'
+        // Android 6.0+. Android Oreo (8.0 / 8.1) = API 26 / 27, jadi sudah tercakup.
+        minSdk 23
+        targetSdk 36
+        versionCode 2
+        versionName '1.0.1'
+    }
+
+    // Kunci tanda tangan TETAP. Tanpa ini, setiap build di GitHub Actions memakai
+    // debug keystore baru yang acak, sehingga APK versi baru gagal dipasang di atas
+    // versi lama ("Aplikasi tidak terinstal"). Dengan kunci tetap, semua build
+    // berikutnya bisa saling menimpa/update.
+    signingConfigs {
+        yutobok {
+            storeFile file('yutobok.jks')
+            storePassword 'yutobok123'
+            keyAlias 'yutobok'
+            keyPassword 'yutobok123'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.yutobok
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.yutobok
+        }
+    }
+}
